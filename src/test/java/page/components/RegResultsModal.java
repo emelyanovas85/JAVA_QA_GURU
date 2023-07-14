@@ -6,7 +6,7 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
 public class RegResultsModal {
-    public void regResultsChek() {
+    public void checkResultsTableUI() {
         $(".modal-content").should(appear);
         $(".modal-header").shouldHave(text("Thanks for submitting the form")).shouldBe(visible);
     }
