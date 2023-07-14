@@ -1,66 +1,77 @@
-package demoqa;
+package demoqa_tests;
 
-import Data.Locale;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.openqa.selenium.WebElement;
-
-import java.io.File;
-import java.util.List;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 
-public class TextBoxTest7 extends TestBase {
+public class TestRegPage extends TestBase {
 
-
-//    @CsvSource({"Андрей, Емельянов",
-//            "Людмила, Емельянова"})
-    @ValueSource(strings = {"Андрей", "Людмила"}) //для передачи одного арргумента с одним типом данных
-    @CsvFileSource (resources = "/testData.scv")
+    @CsvSource({"Андрей, Емельянов"})
+//            "Людмила, Емельянова",
+//            "Вася, Васин"})
+//    @ValueSource(strings = {"Андрей", "Людмила"}) //для передачи одного арргумента с одним типом данных
+//    @CsvFileSource (resources = "/testData.scv")
     @ParameterizedTest (name = "Супер тест с именем {0} и фамилией {1}")
 //    @DisplayName("Супер тест") пишут только в непараметризованном тесте
     @Tags({@Tag("critical"), @Tag("registration")})
-    void dZ(
+    void checkResultAfterSetValueInTable(
             String FirstNameData,
-            String LastNameData,
-            Locale locale,
-            List<String> buttons
+            String LastNameData
+//            Locale locale,
+//            List<String> buttons
     ) {
         String FirstName = FirstNameData;
         String LastName = LastNameData;
         String Email = "emelyanovas85@mail.ru";
 
-        reg.openPage()
+        regPage.openRegPageAndDelBanners()
                 .setFirstName(FirstName)
-                .setLastName(LastName) // простой вариант с this
-                .setBirthData("05", "October", "1985");
-        reg.setEmail(Email); // можно так
+                .setLastName(LastName)
+                .setEmail(Email)
+                .chooseGender("Other")
+                .setTelephoneNumber("9062611673")
+                .setDateOfBirthDayMonthYear("05", "October", "1985")
+                .setSubjects("Arts")
+                .setHobbies("Music")
+                .loadPicture("/Users/eas/Desktop/9ce2d3974b3dd6ca57cf9491b23c9949.jpg")
+                .setCurrentAddress("Санкт-Петербург")
+                .setState("Haryana")
+                .setCity("Panipat")
+                .pushButtonSubmit();
 
-        $("#genterWrapper").$(".custom-control-inline", 0).click();
-        $("label[for=gender-radio-3]").click();
-        $("#userNumber").setValue("1234567890");
-        $("#subjectsInput").setValue("a");
-        $(byText("Arts")).click();
-        $("#hobbiesWrapper").$(".custom-control-inline", 2).click();
-        $("#uploadPicture").uploadFile(new File("/Users/eas/Desktop/9ce2d3974b3dd6ca57cf9491b23c9949.jpg"));
-        $("#uploadPicture").uploadFromClasspath("rty/123.png");
-        WebElement a = $("#state");
-        $("#currentAddress").setValue("gythgytgyhtygyhtyghythgythYYY");
-        $("#state").scrollTo().click();
-        $(byText("Haryana")).click();
-        $("#city").click();
-        $(byText("Karnal")).click();
-        $(".btn.btn-primary").click();
+        sleep(20000);
 
-        reg.veryfyTab()
-                .veryfyonestringtabvalue("Student Name", FirstName + " " + LastName)
-                .veryfyonestringtabvalue("Student Email", Email);
+        regPage.verifyTabTitle()
+                .verifyOneStringTabValue("Student Name", "Андрей Емельянов")
+                .verifyOneStringTabValue("Student Email", "emelyanovas85@mail.ru")
+                .verifyOneStringTabValue("Gender", "Other")
+                .verifyOneStringTabValue("Mobile", "9062611673")
+                .verifyOneStringTabValue("Date of Birth", "05 October,1985")
+                .verifyOneStringTabValue("Subjects", "Arts")
+                .verifyOneStringTabValue("Hobbies", "Music")
+                .verifyOneStringTabValue("Picture", "9ce2d3974b3dd6ca57cf9491b23c9949.jpg")
+                .verifyOneStringTabValue("Address", "Санкт-Петербург")
+                .verifyOneStringTabValue("State and City", "Haryana Panipat");
+//        $("label[for=gender-radio-3]").click();
+//        $("#userNumber").setValue("1234567890");
+//        $("#subjectsInput").setValue("a");
+//        $(byText("Arts")).click();
+//        $("#hobbiesWrapper").$(".custom-control-inline", 2).click();
+//        $("#uploadPicture").uploadFile(new File("/Users/eas/Desktop/9ce2d3974b3dd6ca57cf9491b23c9949.jpg"));
+//        $("#uploadPicture").uploadFromClasspath("rty/123.png");
+//        WebElement a = $("#state");
+//        $("#currentAddress").setValue("gythgytgyhtygyhtyghythgythYYY");
+//        $("#state").scrollTo().click();
+//        $(byText("Haryana")).click();
+//        $("#city").click();
+//        $(byText("Karnal")).click();
+//        $(".btn.btn-primary").click();
+
+//        $("#genterWrapper").$(".custom-control-inline", 0).click();
 //        $("gender-radio-2").parent().click();
 //        $("#dateOfBirthInput").click();
 //        $(".col-md-9.col-sm-12").selectRadio("Female"); //bad
@@ -85,9 +96,8 @@ public class TextBoxTest7 extends TestBase {
 //        $(".table.table-dark").shouldHave(text(FirstName), text(Email));
 //        $("#closeLargeModal").scrollTo().click();
 
-        locale.name(); // встроенный метод
+//        locale.name(); // встроенный метод
 
-        sleep(5000);
     }
 
     @Test
